@@ -1,7 +1,7 @@
 """
 Autoresearch classifier training script.
 Single-file, scikit-learn only.
-Usage: python train.py
+Usage: uv run train.py
 """
 
 import time

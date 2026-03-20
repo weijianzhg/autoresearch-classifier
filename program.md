@@ -15,7 +15,7 @@ To set up a new experiment, work with the user to:
 3. **Read the in-scope files**: The repo is small. Read these files for full context:
    - `prepare.py` — fixed dataset loading and evaluation. Do not modify.
    - `train.py` — the file you modify. Feature extraction, model, pipeline.
-4. **Verify data loads**: Run `python prepare.py` to confirm the dataset downloads and prints stats.
+4. **Verify data loads**: Run `uv run prepare.py` to confirm the dataset downloads and prints stats.
 5. **Initialize results.tsv**: Create `results.tsv` with just the header row. The baseline will be recorded after the first run.
 6. **Confirm and go**: Confirm setup looks good.
 
@@ -30,7 +30,7 @@ Each experiment trains a scikit-learn model on the `core` split (4,391 train / 9
 
 **What you CANNOT do:**
 - Modify `prepare.py`. It is read-only. It contains the fixed evaluation function and data loading.
-- Install new packages or add dependencies beyond what's in `requirements.txt`.
+- Install new packages or add dependencies beyond what's in `pyproject.toml`.
 - Modify the evaluation function. The `evaluate()` function in `prepare.py` is the ground truth metric.
 
 **The goal is simple: get the highest val_accuracy.** The secondary metric is val_f1. Everything is fair game: change the vectorizer, the model, the hyperparameters, add feature engineering, try ensembles.
@@ -93,7 +93,7 @@ LOOP FOREVER:
 1. Look at the git state: the current branch/commit we're on
 2. Tune `train.py` with an experimental idea by directly hacking the code.
 3. git commit
-4. Run the experiment: `python train.py > run.log 2>&1`
+4. Run the experiment: `uv run train.py > run.log 2>&1`
 5. Read out the results: `grep "^val_accuracy:\|^val_f1:" run.log`
 6. If the grep output is empty, the run crashed. Run `tail -n 50 run.log` to read the stack trace and attempt a fix.
 7. Record the results in the tsv (NOTE: do not commit the results.tsv file, leave it untracked by git)

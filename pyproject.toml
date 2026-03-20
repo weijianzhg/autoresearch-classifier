@@ -1,0 +1,13 @@
+[project]
+name = "autoresearch-classifier"
+version = "0.1.0"
+description = "Autoresearch experiment loop for prompt-injection classifiers"
+requires-python = ">=3.10"
+dependencies = [
+    "scikit-learn>=1.5",
+    "datasets>=3.0",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    "huggingface_hub>=0.25",
+]
