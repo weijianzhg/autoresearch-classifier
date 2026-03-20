@@ -6,7 +6,7 @@ Usage: uv run train.py
 
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 from sklearn.pipeline import Pipeline, FeatureUnion
 
 from prepare import load_splits, evaluate
@@ -48,10 +48,9 @@ pipeline = Pipeline([
             analyzer="char_wb",
         )),
     ])),
-    ("clf", LogisticRegression(
+    ("clf", LinearSVC(
         C=C,
         max_iter=MAX_ITER,
-        solver="lbfgs",
         random_state=42,
     )),
 ])
