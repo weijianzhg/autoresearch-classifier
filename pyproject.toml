@@ -10,4 +10,5 @@ dependencies = [
     "numpy>=1.26",
     "matplotlib>=3.8",
     "huggingface_hub>=0.25",
+    "skops>=0.13.0",
 ]
