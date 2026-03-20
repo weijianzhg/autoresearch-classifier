@@ -75,3 +75,5 @@ See [REPORT.md](REPORT.md) for the results of a full autonomous run using Claude
 | Recall    | 0.9888   | 0.9738 | 0.9620 |
 
 **Winning architecture:** Conservative ensemble (LinearSVC + LogisticRegression) with word TF-IDF, char n-gram TF-IDF, and 23 hand-crafted meta features. Both models must agree to flag a sample as malicious, reducing false positives.
+
+![Experiment progress](progress.png)
