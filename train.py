@@ -21,7 +21,7 @@ from prepare import load_splits, evaluate
 # ---------------------------------------------------------------------------
 
 MAX_FEATURES = 50_000
-NGRAM_RANGE = (1, 2)
+NGRAM_RANGE = (1, 3)
 SUBLINEAR_TF = True
 C = 1.0
 MAX_ITER = 1000
@@ -69,7 +69,7 @@ pipeline = Pipeline([
         )),
         ("char", TfidfVectorizer(
             max_features=MAX_FEATURES,
-            ngram_range=(2, 5),
+            ngram_range=(2, 6),
             sublinear_tf=SUBLINEAR_TF,
             strip_accents="unicode",
             analyzer="char_wb",
