@@ -31,7 +31,7 @@ def _get_hf_token():
     global _HF_TOKEN
     if _HF_TOKEN is not None:
         return _HF_TOKEN
-    env_path = os.path.join(os.path.dirname(__file__), ".env_haggingface")
+    env_path = os.path.join(os.path.dirname(__file__), ".env_huggingface")
     if os.path.exists(env_path):
         with open(env_path) as f:
             for line in f:
