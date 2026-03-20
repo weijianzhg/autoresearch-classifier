@@ -5,9 +5,14 @@ Usage: uv run train.py
 """
 
 import time
+import re
+import numpy as np
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.preprocessing import MaxAbsScaler
+from scipy.sparse import hstack, csr_matrix
 
 from prepare import load_splits, evaluate
 
@@ -26,6 +31,28 @@ MAX_ITER = 1000
 # ---------------------------------------------------------------------------
 
 X_train, y_train, X_val, y_val, X_test, y_test = load_splits()
+
+
+# ---------------------------------------------------------------------------
+# Hand-crafted feature extractor
+# ---------------------------------------------------------------------------
+
+class TextFeatures(BaseEstimator, TransformerMixin):
+    """Extract numeric features from raw text."""
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        feats = np.zeros((len(X), 5), dtype=np.float64)
+        for i, text in enumerate(X):
+            feats[i, 0] = len(text)
+            feats[i, 1] = sum(1 for c in text if not c.isalnum() and not c.isspace()) / max(len(text), 1)
+            feats[i, 2] = sum(1 for c in text if c.isupper()) / max(len(text), 1)
+            feats[i, 3] = text.count('\n')
+            feats[i, 4] = len(re.findall(r'[{}()\[\]<>]', text)) / max(len(text), 1)
+        return csr_matrix(feats)
+
 
 # ---------------------------------------------------------------------------
 # Pipeline
@@ -47,6 +74,10 @@ pipeline = Pipeline([
             strip_accents="unicode",
             analyzer="char_wb",
         )),
+        ("meta", Pipeline([
+            ("extract", TextFeatures()),
+            ("scale", MaxAbsScaler()),
+        ])),
     ])),
     ("clf", LinearSVC(
         C=C,
