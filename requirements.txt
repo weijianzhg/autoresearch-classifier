@@ -1,0 +1,6 @@
+scikit-learn>=1.5
+datasets>=3.0
+pandas>=2.0
+numpy>=1.26
+matplotlib>=3.8
+huggingface_hub>=0.25
