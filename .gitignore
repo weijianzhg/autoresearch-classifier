@@ -17,7 +17,6 @@ env/
 
 results.tsv
 run.log
-progress.png
 
 *.pyc
 .DS_Store
