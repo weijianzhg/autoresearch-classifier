@@ -58,3 +58,7 @@ TF-IDF (word unigrams+bigrams, 50k features) + LogisticRegression:
 | Precision | 0.9167 |
 | Recall    | 0.9888 |
 | Train time| 0.3s   |
+
+## Recent run
+
+See [REPORT.md](REPORT.md) for the results of a full autonomous run using Claude Code with Opus 4.6. Over 33 experiments, accuracy improved from 0.9426 to 0.9607 (+1.81%). The best model is published on [HuggingFace](https://huggingface.co/weijianzhg/prompt-injection-classifier).
