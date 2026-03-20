@@ -10,6 +10,7 @@ import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import MaxAbsScaler
 from scipy.sparse import hstack, csr_matrix
@@ -101,19 +102,51 @@ pipeline = Pipeline([
     )),
 ])
 
+pipeline_lr = Pipeline([
+    ("features", FeatureUnion([
+        ("word", TfidfVectorizer(
+            max_features=MAX_FEATURES,
+            ngram_range=NGRAM_RANGE,
+            sublinear_tf=SUBLINEAR_TF,
+            strip_accents="unicode",
+            analyzer="word",
+        )),
+        ("char", TfidfVectorizer(
+            max_features=MAX_FEATURES,
+            ngram_range=(2, 6),
+            sublinear_tf=SUBLINEAR_TF,
+            strip_accents="unicode",
+            analyzer="char_wb",
+        )),
+        ("meta", Pipeline([
+            ("extract", TextFeatures()),
+            ("scale", MaxAbsScaler()),
+        ])),
+    ])),
+    ("clf", LogisticRegression(
+        C=C,
+        max_iter=MAX_ITER,
+        solver="lbfgs",
+        random_state=42,
+    )),
+])
+
 # ---------------------------------------------------------------------------
 # Train
 # ---------------------------------------------------------------------------
 
 t0 = time.time()
 pipeline.fit(X_train, y_train)
+pipeline_lr.fit(X_train, y_train)
 train_time = time.time() - t0
 
 # ---------------------------------------------------------------------------
-# Evaluate
+# Evaluate (majority vote of SVC + LR)
 # ---------------------------------------------------------------------------
 
-y_pred_val = pipeline.predict(X_val)
+y_pred_svc = pipeline.predict(X_val)
+y_pred_lr = pipeline_lr.predict(X_val)
+y_pred_val = ((y_pred_svc + y_pred_lr) >= 2).astype(int)  # both must agree on positive
 print("=== Validation Results ===")
 val_results = evaluate(y_val, y_pred_val)
 
