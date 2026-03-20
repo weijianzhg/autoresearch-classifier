@@ -1,6 +1,6 @@
 # autoresearch-classifier
 
-An autonomous experiment loop that trains classical ML classifiers to detect prompt injection and jailbreak attacks against LLMs.
+An autonomous experiment loop that trains classical ML classifiers to detect prompt injection and jailbreak attacks against LLMs. Based on Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) pattern — where an AI agent iterates on a training script, keeping improvements and discarding regressions — adapted here for classical ML (scikit-learn) instead of GPU-based LLM pretraining.
 
 Uses the [neuralchemy/Prompt-injection-dataset](https://huggingface.co/datasets/neuralchemy/Prompt-injection-dataset) (`core` config: 4,391 train / 941 val / 942 test, ~60% malicious) and scikit-learn models.
 
