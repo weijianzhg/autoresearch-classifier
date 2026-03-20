@@ -7,7 +7,7 @@ Usage: uv run train.py
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, FeatureUnion
 
 from prepare import load_splits, evaluate
 
@@ -32,13 +32,22 @@ X_train, y_train, X_val, y_val, X_test, y_test = load_splits()
 # ---------------------------------------------------------------------------
 
 pipeline = Pipeline([
-    ("tfidf", TfidfVectorizer(
-        max_features=MAX_FEATURES,
-        ngram_range=NGRAM_RANGE,
-        sublinear_tf=SUBLINEAR_TF,
-        strip_accents="unicode",
-        analyzer="word",
-    )),
+    ("features", FeatureUnion([
+        ("word", TfidfVectorizer(
+            max_features=MAX_FEATURES,
+            ngram_range=NGRAM_RANGE,
+            sublinear_tf=SUBLINEAR_TF,
+            strip_accents="unicode",
+            analyzer="word",
+        )),
+        ("char", TfidfVectorizer(
+            max_features=MAX_FEATURES,
+            ngram_range=(2, 5),
+            sublinear_tf=SUBLINEAR_TF,
+            strip_accents="unicode",
+            analyzer="char_wb",
+        )),
+    ])),
     ("clf", LogisticRegression(
         C=C,
         max_iter=MAX_ITER,
