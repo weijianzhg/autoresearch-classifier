@@ -43,14 +43,29 @@ class TextFeatures(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
 
+    INJECTION_KEYWORDS = [
+        "ignore", "disregard", "forget", "pretend", "roleplay",
+        "jailbreak", "bypass", "override", "sudo", "admin",
+        "system prompt", "instructions", "do anything now", "dan",
+        "previous instructions", "new instructions",
+    ]
+
     def transform(self, X):
-        feats = np.zeros((len(X), 5), dtype=np.float64)
+        n_base = 7
+        n_kw = len(self.INJECTION_KEYWORDS)
+        feats = np.zeros((len(X), n_base + n_kw), dtype=np.float64)
         for i, text in enumerate(X):
+            lower = text.lower()
+            words = text.split()
             feats[i, 0] = len(text)
             feats[i, 1] = sum(1 for c in text if not c.isalnum() and not c.isspace()) / max(len(text), 1)
             feats[i, 2] = sum(1 for c in text if c.isupper()) / max(len(text), 1)
             feats[i, 3] = text.count('\n')
             feats[i, 4] = len(re.findall(r'[{}()\[\]<>]', text)) / max(len(text), 1)
+            feats[i, 5] = len(words)
+            feats[i, 6] = np.mean([len(w) for w in words]) if words else 0
+            for j, kw in enumerate(self.INJECTION_KEYWORDS):
+                feats[i, n_base + j] = 1.0 if kw in lower else 0.0
         return csr_matrix(feats)
 
 
