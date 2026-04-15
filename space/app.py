@@ -157,7 +157,7 @@ examples = [
 # Gradio UI
 # ---------------------------------------------------------------------------
 
-with gr.Blocks(title="Prompt Injection Classifier", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="Prompt Injection Classifier") as demo:
     gr.Markdown(
         """
         # Prompt Injection Classifier
@@ -195,4 +195,4 @@ with gr.Blocks(title="Prompt Injection Classifier", theme=gr.themes.Soft()) as d
         cache_examples=True,
     )
 
-demo.launch()
+demo.launch(ssr_mode=False, theme=gr.themes.Soft())
